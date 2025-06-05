@@ -24,4 +24,15 @@ app.MapPost("/api/tarefas",
             return Results.Created($"/api/tarefas/tarefas.Id", tarefa);       
     });
 
+app.MapGet("/api/tarefas/{id}", ([FromRoute] string id,
+    [FromServices] AppDataContext ctx) =>
+{
+    Tarefa? tarefa = ctx.Tarefas.Find(id);
+    if (tarefa == null)
+    {
+        return Results.NotFound();
+    }
+    return Results.Ok(tarefa);
+});
+
 app.Run();

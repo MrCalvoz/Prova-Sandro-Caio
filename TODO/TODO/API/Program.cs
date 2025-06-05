@@ -8,7 +8,10 @@ builder.Services.AddDbContext<AppDataContext>();
 
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
+app.MapGet("/API/Tarefa",
+([FromServices]AppDataContext ctx) =>
+Result.Ok(ctx.Tarefa.ToList())
+);
 
 
 app.Run();

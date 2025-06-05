@@ -58,4 +58,16 @@ app.MapPut("/api/tarefas/{id}", ([FromRoute] string id,
     return Results.Ok(tarefa);
 });
 
+app.MapDelete("/api/tarefas/{id}",(
+    [FromRoute] string,[FromServices] AppDataContext ctx) =>
+    {
+        Tarefa? tarefa = ctx.Tarefas.Find(id);
+        if(tarefa == null){
+            return Results.NotFound();
+            ctx.Tarefa.Remove(tarefas);
+            ctx.SaveChanges();
+            return Results.Ok(tarefa);
+        }
+});
+
 app.Run();

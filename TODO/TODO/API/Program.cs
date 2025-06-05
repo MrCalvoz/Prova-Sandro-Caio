@@ -8,21 +8,21 @@ builder.Services.AddDbContext<AppDataContext>();
 
 var app = builder.Build();
 
-app.MapGet("/api/tarefas",
-    ([FromServices]AppDataContext ctx) =>
-        Results.Ok(ctx.Tarefa.ToList())
-);
+app.MapGet("/api/tarefas", ([FromServices]AppDataContext ctx) => {
+    Results.Ok(ctx.Tarefas.ToList());
+});
 
-app.MapPost("/api/tarefas",
-    ([FromBody]Tarefas tarefas,[FromServices] AppDataContext ctx) =>
-        var tarefa = ctx.Tarefas.Find(Tarefa.StatusId);
-        if(Status == null){
-            return Result.NotFound();
-            tarefa.Status = Status;
-            ctx.Tarefa.Add(tarefa);
-            ctx.SaveChanges();
-            return Results.Created($"/api/tarefas/tarefas.Id", tarefa);       
-    });
+app.MapPost("/api/tarefas", ([FromBody] Tarefa tarefa, [FromServices] AppDataContext ctx) => {
+    Status? status = ctx.Status.Find (tarefa.StatusId);
+    if (status == null)
+    {
+        return Results.NotFound();
+    }
+    tarefa.Status = status;
+    ctx.Tarefas.Add(tarefa);
+    ctx.SaveChanges();
+    return Results.Created($"/api/tarefas/tarefas.Id", tarefa);
+});
 
 app.MapGet("/api/tarefas/{id}", ([FromRoute] string id,
     [FromServices] AppDataContext ctx) =>
@@ -39,7 +39,7 @@ app.MapPut("/api/tarefas/{id}", ([FromRoute] string id,
     [FromBody] Tarefa tarefaAlterado,
     [FromServices] AppDataContext ctx) =>
 {
-    Tarefa?  = ctx.Tarefas.Find(id);
+    Tarefa? tarefa = ctx.Tarefas.Find(id);
     if (tarefa == null)
     {
         return Results.NotFound();
@@ -59,15 +59,16 @@ app.MapPut("/api/tarefas/{id}", ([FromRoute] string id,
 });
 
 app.MapDelete("/api/tarefas/{id}",(
-    [FromRoute] string,[FromServices] AppDataContext ctx) =>
+    [FromRoute] string Id,[FromServices] AppDataContext ctx) =>
     {
-        Tarefa? tarefa = ctx.Tarefas.Find(id);
+        Tarefa? tarefa = ctx.Tarefas.Find(Id);
         if(tarefa == null){
             return Results.NotFound();
-            ctx.Tarefa.Remove(tarefas);
+            
+        }
+        ctx.Tarefas.Remove(tarefa);
             ctx.SaveChanges();
             return Results.Ok(tarefa);
-        }
 });
 
 app.Run();

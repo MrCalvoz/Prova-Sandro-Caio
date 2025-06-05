@@ -8,3 +8,14 @@ Content-Type: application/json
 {
 
 }
+
+### teste1
+PUT http://localhost:5231
+Content-Type: application/json
+
+{
+
+}
+###
+DELETE http://localhost:5231
+Content-Type: application/json
